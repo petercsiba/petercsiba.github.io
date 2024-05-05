@@ -4,6 +4,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' https://www.googletagmanager.com https://www.google-analytics.com;
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com;
+        connect-src 'self' https://www.google-analytics.com;
+        frame-src 'self' https://www.googletagmanager.com;
+        ">
+
     <!-- Google tag (gtag.js) -->
     <!-- TODO: I might need consent for European customers -->
     <script defer src="https://www.googletagmanager.com/gtag/js?id=G-9Z18G2G6P0" type="text/javascript" ></script>

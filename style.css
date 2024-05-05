@@ -158,14 +158,14 @@ span.highlight {
         grid-column: span 12;
         text-align: center;
     }
-    #ddesc {
+    .ddesc {
         grid-column: span 12;
         padding-top: 20px;
         text-align: center;
     }
 }
 
-#ddesc {
+.ddesc {
     padding-top: 20px;
     padding-left: 20px;
     text-align: center;

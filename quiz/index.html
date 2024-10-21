@@ -32,17 +32,17 @@
             height: auto;
             margin-bottom: 10px;
         }
-        .result {
+        .feedback {
+            margin-top: 10px;
             font-weight: bold;
-            margin-top: 20px;
         }
     </style>
 </head>
 <body>
     <h1>Company Quiz</h1>
     <div id="quiz"></div>
-    <button onclick="submitQuiz()">Submit Quiz</button>
-    <p id="result" class="result"></p>
+    <button onclick="submitAnswer()">Submit Answer</button>
+    <p id="feedback" class="feedback"></p>
 
     <script>
         const quizData = [
@@ -80,90 +80,75 @@
                 answers: ["Coffee Makers", "Solar Panels", "Electric Cars", "Vacuum Cleaners"],
                 correct: 2,
                 logo_url: "https://logo.clearbit.com/tesla.com"
-            },
-            {
-                name: "Coca-Cola",
-                question: "What was Coca-Cola originally invented as?",
-                answers: ["Cleaning Solution", "Medicine", "Soft Drink", "Perfume"],
-                correct: 1,
-                logo_url: "https://logo.clearbit.com/coca-cola.com"
-            },
-            {
-                name: "Nike",
-                question: "What is Nike’s famous slogan?",
-                answers: ["Think Different", "Just Do It", "Impossible Is Nothing", "Play Hard"],
-                correct: 1,
-                logo_url: "https://logo.clearbit.com/nike.com"
-            },
-            {
-                name: "McDonald's",
-                question: "What animal is featured in the McDonald's mascot, Ronald McDonald?",
-                answers: ["Cat", "Bird", "Clownfish", "Dog"],
-                correct: 2,
-                logo_url: "https://logo.clearbit.com/mcdonalds.com"
-            },
-            {
-                name: "Samsung",
-                question: "What type of product is Samsung best known for?",
-                answers: ["Furniture", "Phones", "Cameras", "Shoes"],
-                correct: 1,
-                logo_url: "https://logo.clearbit.com/samsung.com"
-            },
-            {
-                name: "Disney",
-                question: "What is Disney’s signature character?",
-                answers: ["Goofy", "Donald Duck", "Mickey Mouse", "Pluto"],
-                correct: 2,
-                logo_url: "https://logo.clearbit.com/disney.com"
             }
         ];
+
+        let currentQuestion = 0;
 
         function renderQuiz() {
             const quizContainer = document.getElementById('quiz');
             quizContainer.innerHTML = '';
-            quizData.forEach((item, index) => {
-                const questionContainer = document.createElement('div');
-                questionContainer.classList.add('question-container');
 
-                const logo = document.createElement('img');
-                logo.src = item.logo_url;
-                logo.alt = item.name + " logo";
-                logo.classList.add('quiz-logo');
-                questionContainer.appendChild(logo);
+            const item = quizData[currentQuestion];
+            const questionContainer = document.createElement('div');
+            questionContainer.classList.add('question-container');
 
-                const question = document.createElement('div');
-                question.classList.add('question');
-                question.innerText = `${index + 1}. ${item.question}`;
-                questionContainer.appendChild(question);
+            const logo = document.createElement('img');
+            logo.src = item.logo_url;
+            logo.alt = item.name + " logo";
+            logo.classList.add('quiz-logo');
+            questionContainer.appendChild(logo);
 
-                const answersDiv = document.createElement('div');
-                answersDiv.classList.add('answers');
+            const question = document.createElement('div');
+            question.classList.add('question');
+            question.innerText = `${currentQuestion + 1}. ${item.question}`;
+            questionContainer.appendChild(question);
 
-                item.answers.forEach((answer, i) => {
-                    const label = document.createElement('label');
-                    const input = document.createElement('input');
-                    input.type = 'radio';
-                    input.name = `question${index}`;
-                    input.value = i;
-                    label.appendChild(input);
-                    label.appendChild(document.createTextNode(answer));
-                    answersDiv.appendChild(label);
-                });
+            const answersDiv = document.createElement('div');
+            answersDiv.classList.add('answers');
 
-                questionContainer.appendChild(answersDiv);
-                quizContainer.appendChild(questionContainer);
+            item.answers.forEach((answer, i) => {
+                const label = document.createElement('label');
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = `question${currentQuestion}`;
+                input.value = i;
+                label.appendChild(input);
+                label.appendChild(document.createTextNode(answer));
+                answersDiv.appendChild(label);
             });
+
+            questionContainer.appendChild(answersDiv);
+            quizContainer.appendChild(questionContainer);
         }
 
-        function submitQuiz() {
-            let score = 0;
-            quizData.forEach((item, index) => {
-                const selected = document.querySelector(`input[name="question${index}"]:checked`);
-                if (selected && parseInt(selected.value) === item.correct) {
-                    score++;
+        function submitAnswer() {
+            const selected = document.querySelector(`input[name="question${currentQuestion}"]:checked`);
+            const feedback = document.getElementById('feedback');
+
+            if (selected) {
+                if (parseInt(selected.value) === quizData[currentQuestion].correct) {
+                    feedback.innerText = "Correct! Moving to the next question.";
+                    feedback.style.color = "green";
+                    currentQuestion++;
+
+                    // If there are more questions, load the next one
+                    if (currentQuestion < quizData.length) {
+                        setTimeout(() => {
+                            feedback.innerText = "";
+                            renderQuiz();
+                        }, 1000);
+                    } else {
+                        feedback.innerText = "Congratulations! You have completed the quiz.";
+                    }
+                } else {
+                    feedback.innerText = "Wrong answer, try again!";
+                    feedback.style.color = "red";
                 }
-            });
-            document.getElementById('result').innerText = `You scored ${score} out of ${quizData.length}!`;
+            } else {
+                feedback.innerText = "Please select an answer before submitting.";
+                feedback.style.color = "orange";
+            }
         }
 
         window.onload = renderQuiz;

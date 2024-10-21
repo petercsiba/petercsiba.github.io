@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .question-container {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .answers label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .quiz-logo {
+            width: 100px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        .result {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Company Quiz</h1>
+    <div id="quiz"></div>
+    <button onclick="submitQuiz()">Submit Quiz</button>
+    <p id="result" class="result"></p>
+
+    <script>
+        const quizData = [
+            {
+                name: "Google",
+                question: "What is Google's unofficial motto?",
+                answers: ["Don’t Be Evil", "Always Right", "Search and Conquer", "Trust No One"],
+                correct: 0,
+                logo_url: "https://logo.clearbit.com/google.com"
+            },
+            {
+                name: "Apple",
+                question: "What was the original name of Apple Inc.?",
+                answers: ["Apple Seeds", "Peach Inc.", "Banana Corp.", "Orange Systems"],
+                correct: 2,
+                logo_url: "https://logo.clearbit.com/apple.com"
+            },
+            {
+                name: "Microsoft",
+                question: "What does Microsoft specialize in?",
+                answers: ["Shoes", "Software", "Hardware", "Watches"],
+                correct: 1,
+                logo_url: "https://logo.clearbit.com/microsoft.com"
+            },
+            {
+                name: "Amazon",
+                question: "What is Amazon's most famous product line?",
+                answers: ["Fireworks", "Books", "Beverages", "Furniture"],
+                correct: 1,
+                logo_url: "https://logo.clearbit.com/amazon.com"
+            },
+            {
+                name: "Tesla",
+                question: "What does Tesla mainly manufacture?",
+                answers: ["Coffee Makers", "Solar Panels", "Electric Cars", "Vacuum Cleaners"],
+                correct: 2,
+                logo_url: "https://logo.clearbit.com/tesla.com"
+            },
+            {
+                name: "Coca-Cola",
+                question: "What was Coca-Cola originally invented as?",
+                answers: ["Cleaning Solution", "Medicine", "Soft Drink", "Perfume"],
+                correct: 1,
+                logo_url: "https://logo.clearbit.com/coca-cola.com"
+            },
+            {
+                name: "Nike",
+                question: "What is Nike’s famous slogan?",
+                answers: ["Think Different", "Just Do It", "Impossible Is Nothing", "Play Hard"],
+                correct: 1,
+                logo_url: "https://logo.clearbit.com/nike.com"
+            },
+            {
+                name: "McDonald's",
+                question: "What animal is featured in the McDonald's mascot, Ronald McDonald?",
+                answers: ["Cat", "Bird", "Clownfish", "Dog"],
+                correct: 2,
+                logo_url: "https://logo.clearbit.com/mcdonalds.com"
+            },
+            {
+                name: "Samsung",
+                question: "What type of product is Samsung best known for?",
+                answers: ["Furniture", "Phones", "Cameras", "Shoes"],
+                correct: 1,
+                logo_url: "https://logo.clearbit.com/samsung.com"
+            },
+            {
+                name: "Disney",
+                question: "What is Disney’s signature character?",
+                answers: ["Goofy", "Donald Duck", "Mickey Mouse", "Pluto"],
+                correct: 2,
+                logo_url: "https://logo.clearbit.com/disney.com"
+            }
+        ];
+
+        function renderQuiz() {
+            const quizContainer = document.getElementById('quiz');
+            quizContainer.innerHTML = '';
+            quizData.forEach((item, index) => {
+                const questionContainer = document.createElement('div');
+                questionContainer.classList.add('question-container');
+
+                const logo = document.createElement('img');
+                logo.src = item.logo_url;
+                logo.alt = item.name + " logo";
+                logo.classList.add('quiz-logo');
+                questionContainer.appendChild(logo);
+
+                const question = document.createElement('div');
+                question.classList.add('question');
+                question.innerText = `${index + 1}. ${item.question}`;
+                questionContainer.appendChild(question);
+
+                const answersDiv = document.createElement('div');
+                answersDiv.classList.add('answers');
+
+                item.answers.forEach((answer, i) => {
+                    const label = document.createElement('label');
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = `question${index}`;
+                    input.value = i;
+                    label.appendChild(input);
+                    label.appendChild(document.createTextNode(answer));
+                    answersDiv.appendChild(label);
+                });
+
+                questionContainer.appendChild(answersDiv);
+                quizContainer.appendChild(questionContainer);
+            });
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            quizData.forEach((item, index) => {
+                const selected = document.querySelector(`input[name="question${index}"]:checked`);
+                if (selected && parseInt(selected.value) === item.correct) {
+                    score++;
+                }
+            });
+            document.getElementById('result').innerText = `You scored ${score} out of ${quizData.length}!`;
+        }
+
+        window.onload = renderQuiz;
+    </script>
+</body>
+</html>
+
